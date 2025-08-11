@@ -1,0 +1,41 @@
+import threading
+import time
+import logging
+
+# !!!!!!!!!! SCRIPT TO BE TESTED !!!!!!!!!
+
+# Secondary function to normalize trim values
+def rc_to_normalized(value, channel='throttle'):
+    # Converts a typical RC value (1000–2000) to a normalized value for Crazyflie.
+    # For roll, pitch, yaw: scales to [-1, 1]
+    # For throttle: scales to [0, 1]
+    if channel == 'throttle':
+        # throttle usually ranges from 1000 (min) to 2000 (max) -> 0 to 1
+        normalized = (value - 1000) / 1000
+        # Limit to [0, 1]
+        return max(0.0, min(1.0, normalized))
+    else:
+        # roll, pitch, yaw: 1000 (min) -> -1, 1500 (center) -> 0, 2000 (max) -> +1
+        normalized = (value - 1500) / 500
+        # Limit to [-1, 1]
+        return max(-1.0, min(1.0, normalized))
+
+# Primary function, input trim values of a controller,(geocage maybe will not work with this) (to be tested with geocage) (top-bot cages will not work)
+def send_rc(self, roll, pitch, throttle, yaw):
+    # Send normalized RC commands to the drone via MotionCommander.
+    # roll, pitch, yaw in [-1,1], throttle in [0,1]
+    try:
+        # Normalizes values
+        roll_n = rc_to_normalized(roll, 'rc')
+        pitch_n = rc_to_normalized(pitch, 'rc')
+        yaw_n = rc_to_normalized(yaw, 'rc')
+        throttle_n = rc_to_normalized(throttle, 'throttle')
+
+        # Sends setpoints
+        self.mc.commander.send_setpoint(roll_n, pitch_n, yaw_n, throttle_n)
+
+        return True
+
+    except Exception as e:
+        print(f"Error enviando comando RC: {e}")
+        return False
