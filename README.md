@@ -1,4 +1,4 @@
-# Crazy_Link
+# CrazyLink
 
 CrazyLink is a library designed to facilitate the development of control applications for the Crazyflie drone.
 This repository was created by a user as part of a master’s thesis project.
