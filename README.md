@@ -1,2 +1,2 @@
 # CrazyLink
-A set of python scripts function no control and manage the Crazyflie 
+A set of python scripts function to control and manage the Crazyflie 
