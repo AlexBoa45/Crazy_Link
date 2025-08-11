@@ -14,7 +14,7 @@ All the detailed explanation can be found in the master’s thesis of: **Develop
 
 ## Structure
 
-Pychamr has been used to develop this library.
+Pycham has been used to develop this library.
 Its structure is basic.
 
 - **crazyLink folder**: Folder that contains the main Dron_crazyflie object, plus 2 additional folders.
