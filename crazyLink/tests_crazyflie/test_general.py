@@ -5,6 +5,7 @@ from crazyLink.Dron_crazyflie import Dron
 
 # Test general
 dron = Dron ()
+dron.connect()
 print ('conectado')
 dron.arm()
 print ('ya he armado')
