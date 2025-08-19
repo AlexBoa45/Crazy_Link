@@ -3,6 +3,7 @@ import time
 from crazyLink.Dron_crazyflie import Dron
 
 dron = Dron()
+dron.connect()
 print ('conectado')
 dron.arm()
 dron.takeOff (0.5)
