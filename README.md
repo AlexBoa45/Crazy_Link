@@ -37,7 +37,7 @@ These are the used libraries:
 
 - **ttkbootstrap 1.10.1**: Additional package of style for tkinter library.
 
-- **tkinter**: Already included with python. GUI library used for demonstrators. 
+- **tkinter**: Already included with python. GUI library used for demos. 
 
 - **customtkinter 5.2.2**: This library has been used to improve visual quality of the principal GUI library tkinter.
 
