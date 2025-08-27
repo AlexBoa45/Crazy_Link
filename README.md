@@ -89,19 +89,18 @@ Inside the **demostradores_crazyflie folder**, there are 3 scripts, 2 of them ar
  - **Dashboard Directo**: Opens a simple real time drone controller.
  - **Dashboard Plot**:  Opens a drone controller, allows the user to create geofences and displays drone position in real time.
 
-## Video Explantion
+## Video Explanation
 
 Due problems editing, here are the sections of the video:
  - Basic test script (till min 3)
  - Main code explanation (from min 3 till min 29)
  - Explanation of GUI tests (after min 29)
 
-[![Watch the video](https://img.youtube.com/vi/58KjJVsbeIk/maxresdefault.jpg)](https://youtu.be/58KjJVsbeIk)
-
+[![Watch the video](https://img.youtube.com/vi/58KjJVsbeIk/mqdefault.jpg)](https://youtu.be/58KjJVsbeIk)
 
 ##  Video Demo
 
-[![Watch the video](https://img.youtube.com/vi/56AXOiJG1PU/maxresdefault.jpg)](https://youtu.be/56AXOiJG1PU)
+[![Watch the video](https://img.youtube.com/vi/56AXOiJG1PU/mqdefault.jpg)](https://youtu.be/56AXOiJG1PU)
 
 
 ## Starting functions:
