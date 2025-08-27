@@ -18,15 +18,15 @@ def connect(self,freq = 4, cf_uri="radio://0/80/2M/E7E7E7E7E7"):
         self.cf = Crazyflie(rw_cache='./cache')
         self.cf_ctrl = SyncCrazyflie(cf_uri, cf=self.cf)
         self.cf_ctrl.open_link()
-        self.mc = None  # With arm function it is modified; it is the drone's actuator (high-level) (using the low-level actuator is not recommended)
+        self.mc = None  # With arm function, it is modified; it is the drone's actuator (high-level) (the low-level actuator is not recommended)
 
         # Check the connection with is_link_open()
         if self.cf_ctrl.is_link_open():
             logging.info(f"[Dron] Conectado a Crazyflie ({cf_uri}).")
 
             # Configurar los distintos logs
-            self.setup_position_log()  # Mandatory to for self-positioning
-            self.setup_attitude_log()  # Mandatory to for self-positioning
+            self.setup_position_log()  # Mandatory to self-positioning
+            self.setup_attitude_log()  # Mandatory to self-positioning
 
             self.setup_flow_deck()              # Optional though deck (FlowV2) is mandatory
             self.detect_and_configure_multiranger()   # Optional (the log of the Multi-RangeFinder is detected and applied)
