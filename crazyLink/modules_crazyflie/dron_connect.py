@@ -8,7 +8,7 @@ from cflib.crazyflie.syncCrazyflie import SyncCrazyflie
 
 # Primary function to connect the dron, the frequency of actualization of data and the radio sik
 def connect(self,freq = 4, cf_uri="radio://0/80/2M/E7E7E7E7E7"):
-    #print ("**** Entramos en conectar")
+    #print ("Entramos en conectar")
     self.frequency = freq
 
     try:
@@ -65,7 +65,7 @@ def setup_position_log(self):
         log_bat.add_variable('pm.vbat', 'float')
 
         try:
-            # Try to do the callback function
+            # Try to start the callback function
             self.cf.log.add_config(log_pos)
             log_pos.data_received_cb.add_callback(
                 lambda timestamp, data, logconf: self.log_pos_callback(timestamp, data, logconf))
@@ -109,6 +109,7 @@ def setup_attitude_log(self):
         log_attitude.add_variable('stateEstimate.yaw', 'float')
 
         try:
+            # Try to start the callback function
             self.cf.log.add_config(log_attitude)
             log_attitude.data_received_cb.add_callback(
                 lambda timestamp, data, logconf: self.log_attitude_callback(timestamp, data, logconf))
@@ -130,24 +131,24 @@ def log_attitude_callback(self, timestamp, data, logconf):
 def setup_flow_deck(self):
     logging.info("[Dron] Configurando Flow Deck V2 (motion + z‑range).")
 
-    # Flujo óptico bruto (deltaX, deltaY)
+    # Brute optical flow (deltaX, deltaY)
     log_flow = LogConfig(name='FlowDeckV2_Motion', period_in_ms=200)
-    # Según Bitcraze, estas son las keys válidas para el PMW3901:
-    # motion.deltaX, motion.deltaY (ticks de flujo óptico)
+    
+    # motion.deltaX, motion.deltaY (ticks of the optical flow)
     log_flow.add_variable('motion.deltaX', 'int16_t')
     log_flow.add_variable('motion.deltaY', 'int16_t')
 
-    # Altura por láser (z‑range) integrado en el mismo deck
+    # Height coming from laser ranger at flow deck v2
     log_z = LogConfig(name='FlowDeckV2_Zrange', period_in_ms=200)
     log_z.add_variable('range.zrange', 'float')  # mm
 
     try:
-        # Arranca el log de flujo óptico
+        # Try to start the callback function
         self.cf.log.add_config(log_flow)
         log_flow.data_received_cb.add_callback(self.log_flow_callback)
         log_flow.start()
 
-        # Arranca el log de z‑range
+        
         self.cf.log.add_config(log_z)
         log_z.data_received_cb.add_callback(self.log_zrange_callback)
         log_z.start()
@@ -157,7 +158,6 @@ def setup_flow_deck(self):
 
 
 def log_flow_callback(self, timestamp, data, logconf):
-    # Para depurar las keys:
     # print(f"{logconf.name} keys:", list(data.keys()))
     self.flow_data = {
         'deltaX': data.get('motion.deltaX', 0),
@@ -166,7 +166,6 @@ def log_flow_callback(self, timestamp, data, logconf):
 
 
 def log_zrange_callback(self, timestamp, data, logconf):
-    """Callback de altura láser (z‑range)."""
     # print(f"{logconf.name} zrange raw:", data.get('range.zrange'))
     self.alt = round(data.get('range.zrange', 0.0) / 1000.0, 3)  # convierte mm a m
 
@@ -175,14 +174,14 @@ def log_zrange_callback(self, timestamp, data, logconf):
 # Secondary function to log the FlowDeckV2 parameters
 def detect_and_configure_multiranger(self):
     try:
-        # Si deck.presence no existe, get_value lanzará excepción
+        # Detect if deck is presence
         decks_present = int(self.cf.param.get_value('deck.presence'))
     except Exception:
         logging.info("[Dron] deck.presence no disponible. Saltando MultiRanger.")
         self.has_range_deck = False
         return
 
-    MULTI_RANGER = 1 << 3  # bitmask del Multi‑Ranger
+    MULTI_RANGER = 1 << 3  # bitmask of Multi‑Ranger
     if decks_present & MULTI_RANGER:
         self.has_range_deck = True
         logging.info("[Dron] MultiRanger Deck detectado. Configurando log de rangos.")
@@ -190,6 +189,7 @@ def detect_and_configure_multiranger(self):
         for var in ('range.front', 'range.back', 'range.left', 'range.right', 'range.bottom'):
             log_range.add_variable(var, 'float')
         try:
+            # Try to initiate callback
             self.cf.log.add_config(log_range)
             log_range.data_received_cb.add_callback(self.log_range_callback)
             log_range.start()
@@ -201,6 +201,7 @@ def detect_and_configure_multiranger(self):
         self.has_range_deck = False
 
 def log_range_callback(self, timestamp, data, logconf):
+    # Return if deck is not presence
     if not getattr(self, 'has_range_deck', False):
         return
 
