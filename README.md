@@ -91,7 +91,7 @@ Inside the **demostradores_crazyflie folder**, there are 3 scripts, 2 of them ar
 
 ## Video Explanation
 
-Due problems editing, here are the sections of the video:
+Because of editing issues, here are the sections of the video:
  - Basic test script (till min 3)
  - Main code explanation (from min 3 till min 29)
  - Explanation of GUI tests (after min 29)
