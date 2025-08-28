@@ -22,7 +22,7 @@ def rc_to_normalized(value, channel='throttle'):
 
 # Primary function, input trim values of a controller,(geocage maybe will not work with this) (to be tested with geocage) (top-bot cages will not work)
 # Allows 2 methods, second method is more recommended, additionally, optional velocities can be applied.
-def send_rc(self, roll, pitch, throttle, yaw, bare_mode=False, velocity_horitzontal=0.3, velocity_vertical=0.2):
+def send_rc(self, roll, pitch, throttle, yaw, bare_mode=False, velocity_horizontal=0.3, velocity_vertical=0.2):
     
     if bare_mode:
         # First mode
@@ -82,7 +82,7 @@ def send_rc(self, roll, pitch, throttle, yaw, bare_mode=False, velocity_horitzon
                     throttle = 0
             
             # Starts linear movements
-            self.mc.start_linear_motion(velocity_horitzontal*pitch, -velocity_horitzontal*roll, velocity_vertical*throttle)
+            self.mc.start_linear_motion(velocity_horizontal*pitch, -velocity_horizontal*roll, velocity_vertical*throttle)
 
         except Exception as e:
             print(f"Error enviando comando RC: {e}")
