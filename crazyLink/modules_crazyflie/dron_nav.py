@@ -192,9 +192,9 @@ def _go(self, direction):
         elif direction == "Right":
             self.mc.start_linear_motion(0, -self.navSpeed, 0)
         elif direction == "Up":
-            self.mc.start_linear_motion(0, 0, -self.navSpeed)
-        elif direction == "Down":
             self.mc.start_linear_motion(0, 0, self.navSpeed)
+        elif direction == "Down":
+            self.mc.start_linear_motion(0, 0, -self.navSpeed)
         elif direction == "Forward-Right":
             self.mc.start_linear_motion(self.navSpeed*0.707, -self.navSpeed*0.707, 0)
         elif direction == "Forward-Left":
