@@ -200,9 +200,9 @@ def _go(self, direction):
         elif direction == "Forward-Left":
             self.mc.start_linear_motion(self.navSpeed*0.707, self.navSpeed*0.707, 0)
         elif direction == "Back-Right":
-            self.mc.start_linear_motion( self.navSpeed*0.707, -self.navSpeed*0.707,0)
+            self.mc.start_linear_motion(-self.navSpeed*0.707, -self.navSpeed*0.707,0)
         elif direction == "Back-Left":
-            self.mc.start_linear_motion( self.navSpeed*0.707, self.navSpeed*0.707,0)
+            self.mc.start_linear_motion(-self.navSpeed*0.707, self.navSpeed*0.707,0)
         else:
             logging.info(f"[Dron] No se identifica direccion.")
             return
