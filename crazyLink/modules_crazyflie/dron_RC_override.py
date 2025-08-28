@@ -22,8 +22,8 @@ def rc_to_normalized(value, channel='throttle'):
 
 # Primary function, input trim values of a controller,(geocage maybe will not work with this) (to be tested with geocage) (top-bot cages will not work)
 # Allows 2 methods, second method is more recommended, additionally, optional velocities can be applied.
-def send_rc(self, roll, pitch, throttle, yaw, bare_mode=False, velocity_horizontal=0.3, velocity_vertical=0.2):
-    
+def send_rc(self, roll, pitch, throttle, yaw, bare_mode=False, velocity_horizontal=0.3, velocity_vertical=0.2, yaw_velo=20):
+
     if bare_mode:
         # First mode
         # Send normalized RC commands to the drone via MotionCommander.
@@ -75,18 +75,19 @@ def send_rc(self, roll, pitch, throttle, yaw, bare_mode=False, velocity_horizont
             throttle = (throttle - 1500)
             if throttle != 0:
                 throttle = throttle / 500
-            
+
             # If the distance to the ground is so small don't allow the user go down.
             if self.position[2] < 0.05:
                 if throttle < 0:
                     throttle = 0
-            
+
             # Starts linear movements
-            self.mc.start_linear_motion(velocity_horizontal*pitch, -velocity_horizontal*roll, velocity_vertical*throttle)
+            self.mc.start_linear_motion(velocity_horizontal*pitch, -velocity_horizontal*roll, velocity_vertical*throttle,yaw_velo*yaw)
 
         except Exception as e:
             print(f"Error enviando comando RC: {e}")
             return False
+
 
 
 
