@@ -173,20 +173,26 @@ def log_zrange_callback(self, timestamp, data, logconf):
 
 # Secondary function to log the FlowDeckV2 parameters
 def detect_and_configure_multiranger(self):
+
     try:
         # Detect if deck is presence
-        decks_present = int(self.cf.param.get_value('deck.presence'))
+        val = self.cf.param.get_value('deck.bcMultiranger')
+        if val == '1':
+            self.has_range_deck = True
+            logging.info("[Dron] MultiRanger Deck detectado.")
+        else:
+            self.has_range_deck = False
+            logging.info("[Dron] MultiRanger Deck NO detectado.")
+
     except Exception:
         logging.info("[Dron] deck.presence no disponible. Saltando MultiRanger.")
         self.has_range_deck = False
         return
 
-    MULTI_RANGER = 1 << 3  # bitmask of Multi‑Ranger
-    if decks_present & MULTI_RANGER:
-        self.has_range_deck = True
+    if self.has_range_deck:
         logging.info("[Dron] MultiRanger Deck detectado. Configurando log de rangos.")
         log_range = LogConfig(name='RangeFinder', period_in_ms=100)
-        for var in ('range.front', 'range.back', 'range.left', 'range.right', 'range.bottom'):
+        for var in ('range.front', 'range.back', 'range.left', 'range.right'):
             log_range.add_variable(var, 'float')
         try:
             # Try to initiate callback
@@ -200,15 +206,16 @@ def detect_and_configure_multiranger(self):
         logging.info("[Dron] MultiRanger Deck NO detectado.")
         self.has_range_deck = False
 
+
 def log_range_callback(self, timestamp, data, logconf):
     # Return if deck is not presence
     if not getattr(self, 'has_range_deck', False):
         return
 
     self.range_data = {
-        'front':  data.get('range.front',  None),
-        'back':   data.get('range.back',   None),
-        'left':   data.get('range.left',   None),
-        'right':  data.get('range.right',  None),
-        'bottom': data.get('range.bottom', None)
+        'front': data.get('range.front', None),
+        'back': data.get('range.back', None),
+        'left': data.get('range.left', None),
+        'right': data.get('range.right', None),
     }
+
