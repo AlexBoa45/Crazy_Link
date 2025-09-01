@@ -74,12 +74,12 @@ class Dron(object):
     from crazyLink.modules_crazyflie.dron_RTL_Land import RTL, Land, _goDown
     from crazyLink.modules_crazyflie.dron_nav import go, _go, _startGo, _stopGo, changeHeading, _changeHeading, changeNavSpeed,_checkPosition
     from crazyLink.modules_crazyflie.dron_goto import goto, _goto, _distanceToDestinationInMeters
-    from crazyLink.modules_crazyflie.dron_parameters import getParams, _getParams, stop_sending_params
+    from crazyLink.modules_crazyflie.dron_custom_telemetry import getParams, _getParams, stop_sending_params
     from crazyLink.modules_crazyflie.dron_local_telemetry import send_local_telemetry_info, _send_local_telemetry_info, \
         stop_sending_local_telemetry_info
     from crazyLink.modules_crazyflie.dron_altitude import change_altitude, _change_altitude
     from crazyLink.modules_crazyflie.dron_move import move_distance, _move_distance, setMoveSpeed, _checkSpeedZero
-    from crazyLink.modules_crazyflie.dron_RC_override import send_rc
+    from crazyLink.modules_crazyflie.dron_RC_override import send_rc, _send_rc, rc_to_normalized
     from crazyLink.modules_crazyflie.dron_bottomGeofence import startBottomGeofence, stopBottomGeofence, \
         _moveBottomGeofence, _checkBottomGeofence
     from crazyLink.modules_crazyflie.dron_topGeofence import stopTopGeofence, startTopGeofence, _moveTopGeofence, \
