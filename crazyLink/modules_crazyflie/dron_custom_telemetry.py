@@ -35,12 +35,12 @@ def _getParams(self, parameters, process_params):
                 result['Altitude z'] = self.alt
 
             # Check if the object has been created (in case the drone does not have the Range Finder deck)
-            if param == 'range_data' and hasattr(self, 'range_data'):
+            if param == 'range_data' and  self.has_range_deck == True:
                 result['Range front'] = self.range_data['front']
                 result['Range back'] = self.range_data['back']
                 result['Range left'] = self.range_data['left']
                 result['Range right'] = self.range_data['right']
-                result['Range bottom'] = self.range_data['bottom']
+
 
         # If there is no function as input, return directly without nothing, otherwise the function
         if process_params is None:
