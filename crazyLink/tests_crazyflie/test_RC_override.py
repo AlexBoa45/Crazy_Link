@@ -7,10 +7,12 @@ import time
 pygame.init()
 pygame.joystick.init()
 
+# Check if joystick is connected
 if pygame.joystick.get_count() == 0:
     print("No joystick connected")
     exit()
 
+# Initiate joystick
 joystick = pygame.joystick.Joystick(0)
 joystick.init()
 print(f"Joystick detected: {joystick.get_name()}")
@@ -23,19 +25,21 @@ def axis_to_pwm(value):
 takingoff = False
 landing = False
 
-
+# Create drone object, connect,arm and optionally create geofences
 try:
     dron = Dron()
     dron.connect()
     print ('conectado')
     time.sleep(2)
-    #dron.setSimpleScenario([1,1])
+    dron.setSimpleScenario([1,1])   # Simple geofence at 1 m pitch, 1 m roll
+    dron.startTopGeofence(0.75)     # Top geofence at 0.75 m
     dron.arm()
     print ('armado')
     time.sleep(2)
 except:
     pass
 
+# Check periodically joystick data and move the drone accordingly
 try:
     while True:
         pygame.event.pump()  # Update joystick events
@@ -54,26 +58,28 @@ try:
 
         # Print values
         print(f"Throttle: {throttle}, Roll: {roll}, Pitch: {pitch}, Yaw: {yaw}")
-
+        
+        # Detect buttons for takeoff and landing
         for event in pygame.event.get():
             if event.type == pygame.JOYBUTTONDOWN:
-                if event.button == 0 and takingoff == False:  # A button
+                if event.button == 0 and takingoff == False:  # A button (xbox controller)
                     print("A button pressed")
                     takingoff = True
                     dron.takeOff(0.5)
 
             if event.type == pygame.JOYBUTTONDOWN:
-                if event.button == 1 and landing == False:  # B button
+                if event.button == 1 and landing == False:  # B button (xbox controller) 
                     print("B button pressed")
                     landing = True
                     dron.Land()
 
             if event.type == pygame.JOYBUTTONDOWN:
-                if event.button == 3 and landing == False:  # Y button
+                if event.button == 3 and landing == False:  # Y button (xbox controller)
                     print("Y button pressed")
                     landing = True
                     dron.RTL()
-        # Test
+                    
+        # When the drone is airborne, allow drone movement.
         if takingoff == True and landing == False:
             dron.send_rc(roll, pitch, throttle, yaw)
 
