@@ -155,6 +155,6 @@ Because of editing issues, here are the sections of the video:
     - send_local_telemetry_info(self, process_local_telemetry_info)
     - stop_sending_local_telemetry_info(self)
 
-- **Script dron_parameters:**
+- **Script dron_custom_telemetry:**
     - getParams(self, parameters, process_params=None)
     - stop_sending_params(self)
