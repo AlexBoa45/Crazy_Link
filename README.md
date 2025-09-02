@@ -129,7 +129,7 @@ Because of editing issues, here are the sections of the video:
     - changeNavSpeed (self, speed)
     - changeHeading (self, absoluteDegrees, blocking=True, callback=None, params = None)
 
-- **Script dron_RC_override ->** send_rc(self, roll, pitch, throttle, yaw)
+- **Script dron_RC_override ->** send_rc(self, roll, pitch, throttle, yaw, blocking=True, bare_mode=False, velocity_horizontal=0.3, velocity_vertical=0.2, yaw_velo=20)
 
 ## Geofence/Geocage functions:
 
