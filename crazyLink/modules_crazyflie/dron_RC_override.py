@@ -10,7 +10,7 @@ import threading
 
 # Primary function to move the drone using PWM and velocities
 # This functions allows the user to give a PWM pulse of 1000 min - 2000 max microseconds, for roll, pitch, throttle and yaw.
-# Additionally, permits to make it blocking or not, choose between base mode or not (I recommend to leave it this) and modify movement velocities.
+# Additionally, permits to make it blocking or not, choose between bare mode or not (I recommend to leave it this) and modify movement velocities.
 def send_rc(self, roll, pitch, throttle, yaw, blocking=True, bare_mode=False, velocity_horizontal=0.3, velocity_vertical=0.2, yaw_velo=20):
     # Check the state of the drone
     if self.state == "flying":
