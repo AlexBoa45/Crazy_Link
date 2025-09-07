@@ -132,6 +132,8 @@ Because of editing issues, here are the sections of the video:
 - **Script dron_RC_override ->** send_rc(self, roll, pitch, throttle, yaw, blocking=True, bare_mode=False, velocity_horizontal=0.3, velocity_vertical=0.2, yaw_velo=20)
 
 ## Geofence/Geocage functions:
+The ComplexGeofence/Geofence function defines a buffer zone between the flyable area and the restricted zone. This buffer can be adjusted when necessary. 
+It is implemented because optical flow noise in self-positioning reduces accuracy, and the buffer ensures a safe margin between the geofence limit and the point where the drone will automatically return to the flyable area.
 
 - **Script dron_bottomGeofence:**
     - startBottomGeofence (self, minAlt)
