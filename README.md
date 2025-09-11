@@ -102,6 +102,86 @@ Because of editing issues, here are the sections of the video:
 
 [![Watch the video](https://img.youtube.com/vi/56AXOiJG1PU/mqdefault.jpg)](https://youtu.be/56AXOiJG1PU)
 
+## Deployment
+
+To connect the drone with the computer it can’t be done via bluetooth or at least it isn’t thought of. The way to connect the drone is via a crazyradio.
+
+There are two types of radios: **Crazyradio PA** and **Crazyradio 2.0**. 
+
+- **For the Crazyradio 2.0**:
+    - The only necessary step is to add the software. Press the radio button and insert the USB into the computer at the same time. **Link**: https://github.com/bitcraze/crazyradio2-firmware/releases/tag/1.1
+    - Download the file from the link above named:
+            **crazyradio2-CRPA-emulation-[version].uf2**
+    - Drag the downloaded file into the USB radio folder. 
+    - Once this is done, the radio will update and emit a white light for a moment, every time it is connected again.
+- **For the Crazyradio 2.0 and Crazyradio PA**:
+    - Install Zadig. Zadig is a driver installer program whose purpose is to install a translator between different programs. **Link**: http://zadig.akeo.ie/
+    - Once you have Zadig, connect the radio, select the radio in the top selector, choose “libusb”, and install the drivers.
+    - If you don’t see any radio, check Device Manager within Zadig. Go to Options and select: List All Devices.
+    - If an error occurs, you can reinstall the libusb driver.
+
+To manage the antenna, you have to install Python +3.10 (https://www.python.org/). During the installation, an option will appear to enable the "Add Python to PATH" checkbox (for Command Prompt/CMD). It is important to select this option.
+
+ - **Application (important to install)**:
+This installation is dedicated for **Windows**, otherwise take a look at Bitcraze.
+
+To install the application, you can either download it from this **link**: https://pypi.org/project/cfclient/
+
+Also using PyCharm, it can be found as cfclient if searching for libraries.
+
+Or install it directly via CMD with:
+
+    pip3 install cfclient 
+
+Once the application is installed, you can access it using the following commands in CMD (especially cfclient):
+
+    cfclient 
+    cfheadless 
+    cfloader 
+    cfzmq 
+    python3 -m cfclient.gui 
+
+To connect the drone, make sure the USB radio is plugged in and the drone is turned on.
+
+In the cfclient interface, click the "Scan" button at the top left, then select and connect to the drone.
+
+Once connected, you will be able to see the mode and stabilization status of the drone.
+
+The drone can be controlled with the controller or by using the commands at the right bottom.
+
+- **Other considerations**:
+To update the Crazyflie firmware (recommended when using decks), make sure to attach all the decks before updating. If the drone detects these decks, it will automatically download the appropriate firmware.
+
+With the drone powered on, open the cfclient application, then go to Connect → Bootloader. Connect the Crazyflie. 
+
+Once connected, under "From release", select the latest firmware version for cf2 (Crazyflie 2.x). If nothing appears, under "From file", you can upload the latest version from the internet (cf2) using this **link**: https://github.com/bitcraze/crazyflie-release/releases.
+
+Once the firmware is selected, click "Program" and wait. The drone will restart multiple times (meanwhile do not touch the drone). Once the blue progress bar is complete, the update is finished.
+
+
+- **Fly using drone Crazyflie Library (important to install)**:
+
+This installation is dedicated for Windows, otherwise take a look at Bitcraze.
+
+To use Python, you need to install cflib. You can install it directly from this **link**:
+https://github.com/bitcraze/crazyflie-lib-python
+
+Also using PyCharm it can be found as cflib if searching for libraries.
+
+However, I recommend creating a repository and cloning it manually.
+
+    git clone https://github.com/bitcraze/crazyflie-clients-python 
+    cd crazyflie-clients-python 
+
+Install cflib using the following command:
+
+    pip3 install -e . 
+
+To uninstall cflib, use:
+
+    pip uninstall cflib
+
+In order to control the drone with Python code, simply turn on the drone, connect the radio, and click play on the code.
 
 ## Starting functions:
 - **Script dron_connect ->** connect (self, freq = 4, cf_uri="radio://0/80/2M/E7E7E7E7E7")
