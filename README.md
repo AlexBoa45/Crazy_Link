@@ -102,7 +102,7 @@ Because of editing issues, here are the sections of the video:
 
 [![Watch the video](https://img.youtube.com/vi/56AXOiJG1PU/mqdefault.jpg)](https://youtu.be/56AXOiJG1PU)
 
-## Deployment
+## Deployment of Crazyflie drone
 
 To connect the drone with the computer it can’t be done via bluetooth or at least it isn’t thought of. The way to connect the drone is via a crazyradio.
 
