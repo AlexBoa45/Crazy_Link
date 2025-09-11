@@ -215,6 +215,7 @@ In order to control the drone with Python code, simply turn on the drone, connec
 ## Geofence/Geocage functions:
 The ComplexGeofence/Geofence functions define a buffer zone between the flyable area and the restricted zone. This buffer can be adjusted when necessary. 
 It is implemented because optical flow noise in self-positioning reduces accuracy, and the buffer ensures a safe margin between the geofence limit and the point where the drone will automatically return to the flyable area.
+I have to mention that the exclusion zones in setComplexScenario need additional testing, as they sometimes don’t work properly.
 
 - **Script dron_bottomGeofence:**
     - startBottomGeofence (self, minAlt)
