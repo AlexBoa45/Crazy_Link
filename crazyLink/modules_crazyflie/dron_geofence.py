@@ -31,7 +31,7 @@ def _moveSimpleScenario(self, callback=None, params = None):
         elif y < -limit_y:
             excess_y = y + limit_y
 
-        # If the excess is not enough don't move the drone
+        # If the excess is not enough don't move the drone (buffer distance) (Arbitrary number, it can be changed)
         if abs(excess_x) < 0.2 and abs(excess_y) < 0.2:
 
             if callback != None:
