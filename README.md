@@ -150,6 +150,7 @@ Once connected, you will be able to see the mode and stabilization status of the
 The drone can be controlled with the controller or by using the commands at the right bottom.
 
 - **Other considerations**:
+  
 To update the Crazyflie firmware (recommended when using decks), make sure to attach all the decks before updating. If the drone detects these decks, it will automatically download the appropriate firmware.
 
 With the drone powered on, open the cfclient application, then go to Connect → Bootloader. Connect the Crazyflie. 
