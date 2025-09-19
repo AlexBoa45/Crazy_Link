@@ -6,7 +6,7 @@ It was created using a Crazyflie 2.1 platform  with a Flow v2 deck and additiona
 CrazyLink generally does not present errors, but it is not entirely exempt. 
 During the creation of this library, its design was based on the DroneLink library.
 
-All the detailed explanation can be found in the master’s thesis of: **Development of an application for the use of drones in Neurorehabilitation** by Alejandro Boadella
+All the detailed explanation can be found in the master’s thesis of: **Development of an application for the use of drones in Neurorehabilitation** 
 
 
 
