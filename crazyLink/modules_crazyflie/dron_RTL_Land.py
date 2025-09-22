@@ -7,6 +7,7 @@ import math
 def _goDown(self, mode, callback=None, params = None):
     # Select the mode
     if mode == 'LAND':
+        self.state = 'landing' # For double check, and for RC script
         # Stop the drone and land directly
         self.mc.stop()
         self.going = False  # in case of staying in nav mode
@@ -15,6 +16,7 @@ def _goDown(self, mode, callback=None, params = None):
         self.mc.land(velocity)
         self.state = "connected"
     else:
+        self.state = 'returning'  # For double check, and for RC script
         self.going = False # in case of staying in nav mode
         time.sleep(0.2)
         # Obtain the position of the drone respect the room frame
@@ -38,11 +40,11 @@ def _goDown(self, mode, callback=None, params = None):
         self.mc.move_distance(dx_body, -dy_body,0, velocity)   # Change the sign due Crazyflie library
 
         # Allow time to reach the target
-        timeout = 5
+        timeout = 6
         start_time = time.time()
         while time.time() - start_time < timeout:
-            if abs(x) < 0.4 and abs(y) <0.4:
-                time.sleep(0.5)
+            if abs(x) < 0.4 and abs(y) < 0.4:
+                time.sleep(1)
                 break
             time.sleep(1)
             logging.info(f"[Dron] Moviendo el dron al punto estimado de aterrizaje.")
