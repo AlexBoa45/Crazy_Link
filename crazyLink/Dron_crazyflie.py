@@ -1,4 +1,5 @@
 
+
 import threading
 import time
 import logging
@@ -30,6 +31,7 @@ class Dron(object):
                   armed
                   takingOff
                   flying
+                  returning
                   landing
               '''
 
@@ -44,22 +46,27 @@ class Dron(object):
 
         self.going = False       # Used in dron_nav
         self.navSpeed = 0.2      # Used in dron_nav (in meters per second)
-        self.move_speed = 0.2    # General drone speed, Used in dron_mov, dron_altitude, etc (in meters per second)
+        self.move_speed = 0.3    # General drone speed, Used in dron_mov, dron_altitude, etc (in meters per second)
         self.direction = 'Stop'  # Used in dron_nav
 
         # Geofence bottom and top
         self.checkMinAlt = False
         self.minAltGeofence  = None
+        self.additional_data_bottom = []    # List used to communicate the geofence info with check function (all them inside the same script)
+
         self.checkMaxAlt = False
         self.maxAltGeofence  = None
+        self.additional_data_top = []       # List used to communicate the geofence info with check function (all them inside the same script)
 
         # Geofence simple
         self.checksimpleGeofence = False
         self.simpleGeofence = None
+        self.additional_data_simple = []    # List used to communicate the geofence info with check function (all them inside the same script)
 
         # Geofence complex
         self.checkcomplexGeofence = False
         self.complexGeofence = None
+        self.additional_data_complex = []   # List used to communicate the geofence info with check function (all them inside the same script)
 
         self.step = 0.5             # Used in dron_mov. It represents the number of meters the drone moves in each step.
         self.frequency = 4          # Packet of telemetry per second (this is only declarative, to change go to connect function)
