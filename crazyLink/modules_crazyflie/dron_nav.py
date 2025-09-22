@@ -16,6 +16,12 @@ from crazyLink.modules_crazyflie.dron_topGeofence import _checkTopGeofence
 from crazyLink.modules_crazyflie.dron_geofence import _checkSimpleScenario
 from crazyLink.modules_crazyflie.dron_complex_geofence import _checkComplexScenario
 
+# Function to change the drone speed (only in NAV script!!)
+def changeNavSpeed (self, speed):
+    logging.info(f"[Dron] Velocidad a {speed}.")
+    self.navSpeed = speed
+    logging.info(f"[Dron] Se ha cambiado la velocidad de navegacion.")
+
 # Secondary function to make the drone fly in navigation
 def _startGo(self):
     if self.state == 'flying':
@@ -25,9 +31,81 @@ def _startGo(self):
 # Secondary function to make the drone stop in navigation
 def _stopGo(self):
     # Stop the thread of NAV
-    self.mc.stop()
     self.going = False
     time.sleep(0.3)
+
+# Primary function to start the navigation mode, as input it needs a direction only
+def go(self, direction, blocking = True):
+    # Check the state of the drone
+    if self.state == 'flying':
+        if blocking:
+            self._go(direction)
+        else:
+            changeHeadingThread = threading.Thread(target=self._go, args=[direction,])
+            changeHeadingThread.start()
+        return True
+    else:
+        logging.info(f"[Dron] No esta volando.")
+        return False
+
+
+# Secondary function, it moves the drone in a specific direction.
+def _go(self, direction):
+
+    # Check if the drone has previously moving in a direction, depending on the state it changes or starts moving.
+    if not self.going:
+        # Put the drone in navigation mode
+        self._startGo()
+    else:
+        self._stopGo()
+        self._startGo()
+        logging.info(f"[Dron] Recomendación: Para el dron usando 'Stop' antes de ejecutar otra direccion.")
+
+    # Identifies the direction
+    self.direction = direction
+
+    # Check the state of NAV
+    if self.going:
+        if direction == "North" or direction == "South" or direction == "East" or direction == "West" :
+            logging.info(f"[Dron] No se ha podido mover el dron debido a que se estaria fuera del escenario simple.")
+            return
+        if direction == "NorthWest" or direction == "NorthEast" or direction == "SouthWest" or direction == "SouthEast":
+            logging.info(f"[Dron] No se ha podido mover el dron debido a que se estaria fuera del escenario simple.")
+            return
+
+        # Moves the drone
+        if direction == "Stop":
+            self.mc.stop()
+            self._stopGo()
+        elif direction == "Forward":
+            self.mc.start_linear_motion(self.navSpeed, 0, 0)
+        elif direction == "Back":
+            self.mc.start_linear_motion(-self.navSpeed, 0, 0)
+        elif direction == "Left":
+            self.mc.start_linear_motion(0, self.navSpeed, 0)
+        elif direction == "Right":
+            self.mc.start_linear_motion(0, -self.navSpeed, 0)
+        elif direction == "Up":
+            self.mc.start_linear_motion(0, 0, self.navSpeed)
+        elif direction == "Down":
+            self.mc.start_linear_motion(0, 0, -self.navSpeed)
+        elif direction == "Forward-Right":
+            self.mc.start_linear_motion(self.navSpeed*0.707, -self.navSpeed*0.707, 0)
+        elif direction == "Forward-Left":
+            self.mc.start_linear_motion(self.navSpeed*0.707, self.navSpeed*0.707, 0)
+        elif direction == "Back-Right":
+            self.mc.start_linear_motion(-self.navSpeed*0.707, -self.navSpeed*0.707,0)
+        elif direction == "Back-Left":
+            self.mc.start_linear_motion(-self.navSpeed*0.707, self.navSpeed*0.707,0)
+        else:
+            logging.info(f"[Dron] No se identifica direccion.")
+            return
+
+      # Starts the thread to check if the drone will be out of the bounds
+        Thread_checkPosition = threading.Thread(target=self._checkPosition, args=[])
+        Thread_checkPosition.start()
+
+    return
 
 # Tertiary function to check if the drone will be out of the geocage
 def _checkPosition(self):
@@ -86,15 +164,31 @@ def _checkPosition(self):
         # Check if the drone is out of bounds
         if _checkSimpleScenario(self, x_new, y_new) or _checkBottomGeofence(self, z_new) or _checkTopGeofence(self,z_new):
             logging.info(f"[Dron] Cambiando la direccion. Fuera del Geofence.")
-            self.mc.stop()
+            if self.going != False: self.mc.stop()
             self._stopGo()
 
         elif _checkComplexScenario(self, x_new, y_new):
             logging.info(f"[Dron] Cambiando la direccion. Fuera del Geofence.")
-            self.mc.stop()
+            if self.going != False: self.mc.stop()
             self._stopGo()
 
         time.sleep(0.1) # to not saturate the code
+
+
+
+# Primary function to change the heading of the drone (absolute values 0 - 360) (though maybe it can admit -180 to 180)
+def changeHeading (self, absoluteDegrees, blocking=True, callback=None, params = None):
+    if self.state == 'flying':
+        if blocking:
+            self._changeHeading(absoluteDegrees)
+        else:
+            changeHeadingThread = threading.Thread(target=self._changeHeading, args=[absoluteDegrees, callback, params])
+            changeHeadingThread.start()
+        logging.info(f"[Dron] Cambiando la direccion.")
+        return True
+    else:
+        logging.info(f"[Dron] No esta volando.")
+        return False
 
 # Secondary function to change the heading of the drone (absolute values 0 - 360) (though maybe it can admit -180 to 180)
 def _changeHeading(self, absoluteDegrees, callback=None, params=None):
@@ -136,93 +230,3 @@ def _changeHeading(self, absoluteDegrees, callback=None, params=None):
             else:
                 callback(self.id, params)
 
-# Primary function to change the heading of the drone (absolute values 0 - 360) (though maybe it can admit -180 to 180)
-def changeHeading (self, absoluteDegrees, blocking=True, callback=None, params = None):
-    if self.state == 'flying':
-        if blocking:
-            self._changeHeading(absoluteDegrees)
-        else:
-            changeHeadingThread = threading.Thread(target=self._changeHeading, args=[absoluteDegrees, callback, params])
-            changeHeadingThread.start()
-        logging.info(f"[Dron] Cambiando la direccion.")
-        return True
-    else:
-        logging.info(f"[Dron] No esta volando.")
-        return False
-
-# Function to change the drone speed (only in NAV script!!)
-def changeNavSpeed (self, speed):
-    logging.info(f"[Dron] Velocidad a {speed}.")
-    self.navSpeed = speed
-    logging.info(f"[Dron] Se ha cambiado la velocidad de navegacion.")
-
-# Secondary function, it moves the drone in a specific direction.
-def _go(self, direction):
-
-    # Check if the drone has previously moving in a direction, depending on the state it changes or starts moving.
-    if not self.going:
-        # Put the drone in navigation mode
-        self._startGo()
-    else:
-        self._stopGo()
-        self._startGo()
-        logging.info(f"[Dron] Recomendación: Para el dron usando 'Stop' antes de ejecutar otra direccion.")
-
-    # Identifies the direction
-    self.direction = direction
-
-    # Check the state of NAV
-    if self.going:
-        if direction == "North" or direction == "South" or direction == "East" or direction == "West" :
-            logging.info(f"[Dron] No se ha podido mover el dron debido a que se estaria fuera del escenario simple.")
-            return
-        if direction == "NorthWest" or direction == "NorthEast" or direction == "SouthWest" or direction == "SouthEast":
-            logging.info(f"[Dron] No se ha podido mover el dron debido a que se estaria fuera del escenario simple.")
-            return
-
-        # Moves the drone
-        if direction == "Stop":
-            self._stopGo()
-        elif direction == "Forward":
-            self.mc.start_linear_motion(self.navSpeed, 0, 0)
-        elif direction == "Back":
-            self.mc.start_linear_motion(-self.navSpeed, 0, 0)
-        elif direction == "Left":
-            self.mc.start_linear_motion(0, self.navSpeed, 0)
-        elif direction == "Right":
-            self.mc.start_linear_motion(0, -self.navSpeed, 0)
-        elif direction == "Up":
-            self.mc.start_linear_motion(0, 0, self.navSpeed)
-        elif direction == "Down":
-            self.mc.start_linear_motion(0, 0, -self.navSpeed)
-        elif direction == "Forward-Right":
-            self.mc.start_linear_motion(self.navSpeed*0.707, -self.navSpeed*0.707, 0)
-        elif direction == "Forward-Left":
-            self.mc.start_linear_motion(self.navSpeed*0.707, self.navSpeed*0.707, 0)
-        elif direction == "Back-Right":
-            self.mc.start_linear_motion(-self.navSpeed*0.707, -self.navSpeed*0.707,0)
-        elif direction == "Back-Left":
-            self.mc.start_linear_motion(-self.navSpeed*0.707, self.navSpeed*0.707,0)
-        else:
-            logging.info(f"[Dron] No se identifica direccion.")
-            return
-
-      # Starts the thread to check if the drone will be out of the bounds
-        Thread_checkPosition = threading.Thread(target=self._checkPosition, args=[])
-        Thread_checkPosition.start()
-
-    return
-
-# Primary function to start the navigation mode, as input it needs a direction only
-def go(self, direction, blocking = True):
-    # Check the state of the drone
-    if self.state == 'flying':
-        if blocking:
-            self._go(direction)
-        else:
-            changeHeadingThread = threading.Thread(target=self._go, args=[direction,])
-            changeHeadingThread.start()
-        return True
-    else:
-        logging.info(f"[Dron] No esta volando.")
-        return False
