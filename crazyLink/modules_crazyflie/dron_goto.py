@@ -31,6 +31,7 @@ def _goto (self, transversal, lateral, alt, callback=None, params = None):
                     callback(self.id)
                 else:
                     callback(self.id, params)
+
     elif _checkComplexScenario(self, transversal, lateral):
         logging.info(f"[Dron] Funcion goto fuera del escenario de exclusion complejo (geofence complejo).")
         # Callback
