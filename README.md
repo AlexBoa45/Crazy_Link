@@ -216,21 +216,22 @@ In order to control the drone with Python code, simply turn on the drone, connec
 The ComplexGeofence/Geofence functions define a buffer zone between the flyable area and the restricted zone. This buffer can be adjusted when necessary. 
 It is implemented because optical flow noise in self-positioning reduces accuracy, and the buffer ensures a safe margin between the geofence limit and the point where the drone will automatically return to the flyable area.
 I have to mention that the exclusion zones in setComplexScenario need additional testing, as they sometimes don’t work properly.
+Top and bottom geofences are only activated to estimate if the drone can fly or not in that zone, they are not active geofence as simple-complex ones. This means that they cannot move the drone if the drone is in a not flyable area. However the code to change the altitude to the right one has been developed.
 
 - **Script dron_bottomGeofence:**
-    - startBottomGeofence (self, minAlt)
+    - startBottomGeofence (self, minAlt,callback=None, params = None)
     - stopBottomGeofence (self)
 
 - **Script dron_topGeofence:**
-    - startTopGeofence (self, minAlt)
+    - startTopGeofence (self, maxAlt,callback=None, params = None)
     - stopTopGeofence (self)
 
 - **Script dron_geofence:**
-    - setSimpleScenario (self,scenario, watchdog=True, blocking=True, callback=None, params = None)
+    - setSimpleScenario (self,scenario, type = None, blocking=True, callback=None, params = None, watchdog=True)
     - deleteSimpleScenario (self)
 
 - **Script dron_complex_geofence:**
-    - setComplexScenario (self,inside_polygon, exclusion, watchdog=True, blocking=True, callback=None, params = None)
+    - setComplexScenario (self,inside_polygon, exclusion,type=None, blocking=True, callback=None, params = None, watchdog=True)
     - deleteComplexScenario (self)
 
 ## Telemetry functions:
