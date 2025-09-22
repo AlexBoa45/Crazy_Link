@@ -113,11 +113,11 @@ def _send_rc(self, roll, pitch, throttle, yaw, bare_mode=False, velocity_horizon
             # Check if the drone is out of bounds
             if _checkSimpleScenario(self, x_new, y_new) or _checkBottomGeofence(self,z_new) or _checkTopGeofence(self, z_new):
                 logging.info(f"[Dron] Fuera del Geofence.")
-                self.mc.stop()
+                if self.state == 'flying': self.mc.stop()
 
             elif _checkComplexScenario(self, x_new, y_new):
                 logging.info(f"[Dron] Fuera del Geofence.")
-                self.mc.stop()
+                if self.state == 'flying': self.mc.stop()
 
             else:
                 # Starts linear movements
